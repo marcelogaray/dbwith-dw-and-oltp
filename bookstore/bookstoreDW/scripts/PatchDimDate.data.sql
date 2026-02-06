@@ -1,0 +1,4 @@
+-- PatchDimDate.data.sql para bookstoreDW
+-- Script para realizar ajustes o parches a la tabla DimDate si es necesario
+-- Ejemplo: actualizar nombres de meses o días si hay cambios
+-- UPDATE dbo.DimDate SET MonthName = 'Enero' WHERE Month = 1 AND Year = 2020;

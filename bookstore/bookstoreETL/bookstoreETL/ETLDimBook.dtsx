@@ -1,0 +1,1453 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="4/5/2023 8:33:41 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="HOME"
+  DTS:CreatorName="HOME\Marcelo Claure"
+  DTS:DTSID="{2B429873-BEE2-410F-B35A-F72E2E31F2CD}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1010.2"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="ETLDimBook"
+  DTS:PackageType="5"
+  DTS:VersionBuild="74"
+  DTS:VersionGUID="{D1DE86F9-BF2F-408C-B4E0-7990894D226C}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Destination.BookstoreDW]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{18E21D3F-3761-43E5-A878-2B63EE296808}"
+      DTS:ObjectName="Destination.BookstoreDW">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=DESKTOP-CJT65KF;Initial Catalog=BookstoreDW;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-DimCustomer-{18E21D3F-3761-43E5-A878-2B63EE296808}Destination.BookstoreDW;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Source.Bookstore]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{B9AAE1C2-02D2-4E58-8FB7-4EAAFEA520C2}"
+      DTS:ObjectName="Source.Bookstore">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectRetryCount="1"
+          DTS:ConnectRetryInterval="5"
+          DTS:ConnectionString="Data Source=DESKTOP-CJT65KF;Initial Catalog=Bookstore;Provider=SQLOLEDB.1;Integrated Security=SSPI;Application Name=SSIS-DimCustomer-{B9AAE1C2-02D2-4E58-8FB7-4EAAFEA520C2}Source.Bookstore;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{83A54460-6D50-4121-84BF-3DD356F1FEC1}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="DBTSValue">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+    <DTS:Variable
+      DTS:CreationName=""
+      DTS:DTSID="{D29C25F5-B8C1-4D58-8EDD-685B195A3DB1}"
+      DTS:IncludeInDebugDump="6789"
+      DTS:Namespace="User"
+      DTS:ObjectName="LastRowValue">
+      <DTS:VariableValue
+        DTS:DataType="20">0</DTS:VariableValue>
+    </DTS:Variable>
+  </DTS:Variables>
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Add New Book"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{9603D9A9-11F1-468C-8894-0C9CC3E28F2F}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Add New Book"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Add New Book\Búsqueda"
+              componentClassID="Microsoft.Lookup"
+              contactInfo="Búsqueda;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;6"
+              description="Combina columnas adicionales con el flujo de datos mediante la búsqueda de valores en una tabla. Por ejemplo, se combina la columna 'id. de empleado' con la tabla de empleados para obtener la 'fecha de contratación' y 'el nombre de empleado'. Se recomienda esta transformación cuando hay suficiente espacio en memoria para la tabla de búsqueda."
+              name="Búsqueda"
+              usesDispositions="true"
+              version="6">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Especifica la instrucción SQL que genera la tabla de búsqueda."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from [dbo].[DimBook]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica una instrucción SQL que usa parámetros para generar la tabla de búsqueda."
+                  expressionType="Notify"
+                  name="SqlCommandParam"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">select * from (select * from [dbo].[DimBook]) [refTable]
+where [refTable].[BookID] = ?</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el tipo de conexión utilizado para tener acceso al conjunto de datos de referencia."
+                  name="ConnectionType"
+                  typeConverter="LookupConnectionType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el tipo de caché de la tabla de búsqueda."
+                  name="CacheType"
+                  typeConverter="CacheType">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cómo la transformación de búsquedas trata las filas sin entradas coincidentes en el conjunto de datos de referencia."
+                  name="NoMatchBehavior"
+                  typeConverter="LookupNoMatchBehavior">1</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el porcentaje de la caché asignado a las filas sin entradas coincidentes en el conjunto de datos de referencia."
+                  name="NoMatchCachePercentage">0</property>
+                <property
+                  dataType="System.Int32"
+                  description="Uso de memoria máximo para la caché de referencia en una plataforma de 32 bits."
+                  name="MaxMemoryUsage">25</property>
+                <property
+                  dataType="System.Int64"
+                  description="Uso de memoria máximo para la caché de referencia en una plataforma de 64 bits."
+                  name="MaxMemoryUsage64">25</property>
+                <property
+                  dataType="System.String"
+                  description="Indica si se debe hacer referencia a metadatos en formato XML."
+                  name="ReferenceMetadataXml">&lt;referenceMetadata&gt;&lt;referenceColumns&gt;&lt;referenceColumn name="BookKey" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="BookID" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="Title" dataType="DT_STR" length="400" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="AuthorNames" dataType="DT_STR" length="800" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="ISBN13" dataType="DT_STR" length="13" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="LanguageName" dataType="DT_STR" length="50" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="NumPages" dataType="DT_I4" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="PublicationDate" dataType="DT_WSTR" length="10" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="PublisherName" dataType="DT_STR" length="400" precision="0" scale="0" codePage="1252"/&gt;&lt;referenceColumn name="IsActive" dataType="DT_BOOL" length="0" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="StartDate" dataType="DT_WSTR" length="10" precision="0" scale="0" codePage="0"/&gt;&lt;referenceColumn name="EndDate" dataType="DT_WSTR" length="10" precision="0" scale="0" codePage="0"/&gt;&lt;/referenceColumns&gt;&lt;/referenceMetadata&gt;</property>
+                <property
+                  containsID="true"
+                  dataType="System.String"
+                  description="Especifica la lista de identificadores de linaje que están asignados a los parámetros que usa la instrucción SQL de la propiedad SQLCommand. Las entradas de la lista están separadas por puntos y comas."
+                  name="ParameterMap">#{Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[book_id]};</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Determina si las claves duplicadas de los datos de referencia se deben tratar como errores cuando se usa el modo de caché."
+                  name="TreatDuplicateKeysAsError">false</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Add New Book\Búsqueda.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Destination.BookstoreDW]"
+                  connectionManagerRefId="Package.ConnectionManagers[Destination.BookstoreDW]"
+                  description="Administrador de conexiones utilizado para obtener acceso a los datos de búsqueda."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Add New Book\Búsqueda.Inputs[Entrada de búsqueda]"
+                  name="Entrada de búsqueda">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Add New Book\Búsqueda.Inputs[Entrada de búsqueda].Columns[book_id]"
+                      cachedDataType="i4"
+                      cachedName="book_id"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[book_id]">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica la columna de la tabla de referencia con la que se combina una columna."
+                          name="JoinToReferenceColumn">BookID</property>
+                        <property
+                          dataType="System.Null"
+                          description="Especifica la columna de la tabla de referencia de la que se copia una columna."
+                          name="CopyFromReferenceColumn" />
+                      </properties>
+                    </inputColumn>
+                  </inputColumns>
+                  <externalMetadataColumns />
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Add New Book\Búsqueda.Outputs[Salida de entradas coincidentes de búsqueda]"
+                  errorOrTruncationOperation="Búsqueda"
+                  exclusionGroup="1"
+                  name="Salida de entradas coincidentes de búsqueda"
+                  synchronousInputId="Package\Add New Book\Búsqueda.Inputs[Entrada de búsqueda]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Add New Book\Búsqueda.Outputs[Salida de entradas coincidentes de búsqueda].Columns[BookKey]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Copiar columna"
+                      lineageId="Package\Add New Book\Búsqueda.Outputs[Salida de entradas coincidentes de búsqueda].Columns[BookKey]"
+                      name="BookKey"
+                      truncationRowDisposition="FailComponent">
+                      <properties>
+                        <property
+                          dataType="System.String"
+                          description="Especifica la columna de la tabla de referencia de la que se copia una columna."
+                          name="CopyFromReferenceColumn">BookKey</property>
+                      </properties>
+                    </outputColumn>
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Add New Book\Búsqueda.Outputs[Salida de entradas no coincidentes de búsqueda]"
+                  description="Salida de búsqueda que trata las filas sin entradas coincidentes en el conjunto de datos de referencia. Utilice esta salida cuando la propiedad NoMatchBehavior esté establecida en 'Enviar las filas sin entradas coincidentes a la salida de entradas no coincidentes'."
+                  exclusionGroup="1"
+                  name="Salida de entradas no coincidentes de búsqueda"
+                  synchronousInputId="Package\Add New Book\Búsqueda.Inputs[Entrada de búsqueda]">
+                  <externalMetadataColumns />
+                </output>
+                <output
+                  refId="Package\Add New Book\Búsqueda.Outputs[Salida de error de búsqueda]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de búsqueda"
+                  synchronousInputId="Package\Add New Book\Búsqueda.Inputs[Entrada de búsqueda]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Add New Book\Búsqueda.Outputs[Salida de error de búsqueda].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Búsqueda.Outputs[Salida de error de búsqueda].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Add New Book\Búsqueda.Outputs[Salida de error de búsqueda].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Búsqueda.Outputs[Salida de error de búsqueda].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Add New Book\Load Dim"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="Destino de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;4"
+              description="Destino de OLE DB"
+              name="Load Dim"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset">[dbo].[DimBook]</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si los valores proporcionados para columnas de identidad se van a copiar al destino. Si es False, los valores de las columnas de identidad se generan automáticamente en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indica si las columnas que contienen NULL tendrán NULL insertado en el destino. Si es False, las columnas que contienen NULL tendrán sus valores predeterminados insertados en el destino. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica opciones para usar con la carga rápida. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica cuándo se emiten confirmaciones durante la inserción de datos. El valor 0 especifica que se emitirá una confirmación al final de la inserción de datos. Solo se aplica si está activada la carga rápida."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Add New Book\Load Dim.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Destination.BookstoreDW]"
+                  connectionManagerRefId="Package.ConnectionManagers[Destination.BookstoreDW]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB]"
+                  errorOrTruncationOperation="Insertar"
+                  errorRowDisposition="IgnoreFailure"
+                  hasSideEffects="true"
+                  name="Entrada de destino de OLE DB">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[title]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="400"
+                      cachedName="title"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[Title]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[title]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[isbn13]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="13"
+                      cachedName="isbn13"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[ISBN13]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[isbn13]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[book_id]"
+                      cachedDataType="i4"
+                      cachedName="book_id"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[BookID]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[book_id]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[author_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="400"
+                      cachedName="author_name"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[AuthorNames]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[author_name]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[language_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="language_name"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[LanguageName]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[language_name]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[num_pages]"
+                      cachedDataType="i4"
+                      cachedName="num_pages"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[NumPages]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[num_pages]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[publication_date]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="publication_date"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[PublicationDate]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publication_date]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].Columns[publisher_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="400"
+                      cachedName="publisher_name"
+                      externalMetadataColumnId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[PublisherName]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publisher_name]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[IsActive]"
+                      dataType="bool"
+                      name="IsActive" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[StartDate]"
+                      dataType="wstr"
+                      length="10"
+                      name="StartDate" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[EndDate]"
+                      dataType="wstr"
+                      length="10"
+                      name="EndDate" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[BookKey]"
+                      dataType="i4"
+                      name="BookKey" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[BookID]"
+                      dataType="i4"
+                      name="BookID" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[Title]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="Title" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[AuthorNames]"
+                      codePage="1252"
+                      dataType="str"
+                      length="800"
+                      name="AuthorNames" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[ISBN13]"
+                      codePage="1252"
+                      dataType="str"
+                      length="13"
+                      name="ISBN13" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[LanguageName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="LanguageName" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[NumPages]"
+                      dataType="i4"
+                      name="NumPages" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[PublicationDate]"
+                      dataType="wstr"
+                      length="10"
+                      name="PublicationDate" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB].ExternalColumns[PublisherName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="PublisherName" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Add New Book\Load Dim.Outputs[Salida de error de destino de OLE DB]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="Salida de error de destino de OLE DB"
+                  synchronousInputId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Add New Book\Load Dim.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Load Dim.Outputs[Salida de error de destino de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Add New Book\Load Dim.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Load Dim.Outputs[Salida de error de destino de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Add New Book\Load staging"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Load staging"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[staging].[book]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Add New Book\Load staging.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Destination.BookstoreDW]"
+                  connectionManagerRefId="Package.ConnectionManagers[Destination.BookstoreDW]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="IgnoreFailure"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[title]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="400"
+                      cachedName="title"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[Title]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[title]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[isbn13]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="13"
+                      cachedName="isbn13"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[ISBN13]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[isbn13]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[book_id]"
+                      cachedDataType="i4"
+                      cachedName="book_id"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[BookID]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[book_id]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[author_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="400"
+                      cachedName="author_name"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[AuthorNames]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[author_name]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[language_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="50"
+                      cachedName="language_name"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[LanguageName]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[language_name]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[num_pages]"
+                      cachedDataType="i4"
+                      cachedName="num_pages"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[NumPages]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[num_pages]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[publication_date]"
+                      cachedDataType="wstr"
+                      cachedLength="10"
+                      cachedName="publication_date"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[PublicationDate]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publication_date]" />
+                    <inputColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].Columns[publisher_name]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="400"
+                      cachedName="publisher_name"
+                      externalMetadataColumnId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[PublisherName]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publisher_name]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[IsActive]"
+                      dataType="bool"
+                      name="IsActive" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[BookID]"
+                      dataType="i4"
+                      name="BookID" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[Title]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="Title" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[AuthorNames]"
+                      codePage="1252"
+                      dataType="str"
+                      length="800"
+                      name="AuthorNames" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[ISBN13]"
+                      codePage="1252"
+                      dataType="str"
+                      length="13"
+                      name="ISBN13" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[LanguageName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="LanguageName" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[NumPages]"
+                      dataType="i4"
+                      name="NumPages" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[PublicationDate]"
+                      dataType="wstr"
+                      length="10"
+                      name="PublicationDate" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input].ExternalColumns[PublisherName]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="PublisherName" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Add New Book\Load staging.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Add New Book\Load staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Load staging.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Add New Book\Load staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Load staging.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Add New Book\Origen de OLE DB"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="Origen de OLE DB;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; Todos los derechos reservados; http://www.microsoft.com/sql/support;7"
+              description="Origen de OLE DB"
+              name="Origen de OLE DB"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="Número de segundos antes de que se agote el tiempo de espera de un comando. Un valor de 0 indica un tiempo de espera infinito."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Especifica el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowset"></property>
+                <property
+                  dataType="System.String"
+                  description="Especifica la variable que contiene el nombre del objeto de base de datos usado para abrir un conjunto de filas."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="Comando SQL para ejecutar."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">EXECUTE [dbo].[GetBookChangesByRowVersion] @startRow=? , @endRow=?;</property>
+                <property
+                  dataType="System.String"
+                  description="Variable que contiene el comando SQL para ejecutar."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica la página de códigos de columna para utilizar cuando la información de página de códigos no está disponible en el origen de datos."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Fuerza el uso del valor de la propiedad DefaultCodePage al describir datos de caracteres."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Especifica el modo utilizado para obtener acceso a la base de datos."
+                  name="AccessMode"
+                  typeConverter="AccessMode">2</property>
+                <property
+                  dataType="System.String"
+                  description="Asignaciones entre los parámetros del comando SQL y las variables."
+                  name="ParameterMapping">"@startRow:Input",{D29C25F5-B8C1-4D58-8EDD-685B195A3DB1};"@endRow:Input",{83A54460-6D50-4121-84BF-3DD356F1FEC1};</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Add New Book\Origen de OLE DB.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[Source.Bookstore]"
+                  connectionManagerRefId="Package.ConnectionManagers[Source.Bookstore]"
+                  description="La conexión de tiempo de ejecución OLE DB usada para obtener acceso a la base de datos."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB]"
+                  name="Salida de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[book_id]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[book_id]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[book_id]"
+                      name="book_id"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[title]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[title]"
+                      length="400"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[title]"
+                      name="title"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[isbn13]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[isbn13]"
+                      length="13"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[isbn13]"
+                      name="isbn13"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[language_code]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[language_code]"
+                      length="8"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[language_code]"
+                      name="language_code"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[language_name]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[language_name]"
+                      length="50"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[language_name]"
+                      name="language_name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[num_pages]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[num_pages]"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[num_pages]"
+                      name="num_pages"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publication_date]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[publication_date]"
+                      length="10"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publication_date]"
+                      name="publication_date"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publisher_name]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[publisher_name]"
+                      length="400"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[publisher_name]"
+                      name="publisher_name"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[author_name]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversión"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[author_name]"
+                      length="400"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].Columns[author_name]"
+                      name="author_name"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[book_id]"
+                      dataType="i4"
+                      name="book_id" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[title]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="title" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[isbn13]"
+                      codePage="1252"
+                      dataType="str"
+                      length="13"
+                      name="isbn13" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[language_code]"
+                      codePage="1252"
+                      dataType="str"
+                      length="8"
+                      name="language_code" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[language_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      name="language_name" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[num_pages]"
+                      dataType="i4"
+                      name="num_pages" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[publication_date]"
+                      dataType="wstr"
+                      length="10"
+                      name="publication_date" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[publisher_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="publisher_name" />
+                    <externalMetadataColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB].ExternalColumns[author_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      name="author_name" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB]"
+                  isErrorOut="true"
+                  name="Salida de error de origen de OLE DB">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[book_id]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[book_id]"
+                      name="book_id" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[title]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[title]"
+                      name="title" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[isbn13]"
+                      codePage="1252"
+                      dataType="str"
+                      length="13"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[isbn13]"
+                      name="isbn13" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[language_code]"
+                      codePage="1252"
+                      dataType="str"
+                      length="8"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[language_code]"
+                      name="language_code" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[language_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="50"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[language_name]"
+                      name="language_name" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[num_pages]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[num_pages]"
+                      name="num_pages" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[publication_date]"
+                      dataType="wstr"
+                      length="10"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[publication_date]"
+                      name="publication_date" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[publisher_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[publisher_name]"
+                      name="publisher_name" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[author_name]"
+                      codePage="1252"
+                      dataType="str"
+                      length="400"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[author_name]"
+                      name="author_name" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de error de origen de OLE DB].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Add New Book.Paths[Salida de entradas coincidentes de búsqueda]"
+              endId="Package\Add New Book\Load staging.Inputs[OLE DB Destination Input]"
+              name="Salida de entradas coincidentes de búsqueda"
+              startId="Package\Add New Book\Búsqueda.Outputs[Salida de entradas coincidentes de búsqueda]" />
+            <path
+              refId="Package\Add New Book.Paths[Salida de entradas no coincidentes de búsqueda]"
+              endId="Package\Add New Book\Load Dim.Inputs[Entrada de destino de OLE DB]"
+              name="Salida de entradas no coincidentes de búsqueda"
+              startId="Package\Add New Book\Búsqueda.Outputs[Salida de entradas no coincidentes de búsqueda]" />
+            <path
+              refId="Package\Add New Book.Paths[Salida de origen de OLE DB]"
+              endId="Package\Add New Book\Búsqueda.Inputs[Entrada de búsqueda]"
+              name="Salida de origen de OLE DB"
+              startId="Package\Add New Book\Origen de OLE DB.Outputs[Salida de origen de OLE DB]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get Database Last Change"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E303AD8F-3127-4BE1-B4E3-6D511F7038B4}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Database Last Change"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{B9AAE1C2-02D2-4E58-8FB7-4EAAFEA520C2}"
+          SQLTask:SqlStatementSource="EXECUTE [dbo].[GetDatabaseRowVersion] "
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="dbts"
+            SQLTask:DtsVariableName="User::DBTSValue" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Get Last Book change"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C07DF1DB-7396-41C2-8107-D109EBA480B6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Get Last Book change"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{18E21D3F-3761-43E5-A878-2B63EE296808}"
+          SQLTask:SqlStatementSource="EXECUTE [dbo].[GetLastPackageRowVersion] @tableName = 'DimBook'"
+          SQLTask:ResultType="ResultSetType_SingleRow" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ResultBinding
+            SQLTask:ResultName="LastRowVersion"
+            SQLTask:DtsVariableName="User::LastRowValue" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Initialize staging table"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{C9EF76C8-818F-4660-B24A-43C052D5F55D}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Initialize staging table"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{18E21D3F-3761-43E5-A878-2B63EE296808}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE [staging].[Book];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Sync Book Data"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{73A87B8A-5F47-43DA-B118-CDB48D7FF259}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Sync Book Data"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{18E21D3F-3761-43E5-A878-2B63EE296808}"
+          SQLTask:SqlStatementSource="EXECUTE [dbo].[DW_MergeDimBook];" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Update LastRowVersion"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{6CAEE130-B6B5-488F-B2AE-1520F8154639}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Update LastRowVersion"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2022; © 2022 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{18E21D3F-3761-43E5-A878-2B63EE296808}"
+          SQLTask:SqlStatementSource="EXECUTE [dbo].[UpdateLastPackageRowVersion]  @tableName='DimBook', @lastRowVersion=?" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask">
+          <SQLTask:ParameterBinding
+            SQLTask:ParameterName="0"
+            SQLTask:DtsVariableName="User::DBTSValue"
+            SQLTask:ParameterDirection="Input"
+            SQLTask:DataType="3"
+            SQLTask:ParameterSize="-1" />
+        </SQLTask:SqlTaskData>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{F1563B3B-52FC-4D67-860D-E2453943F429}"
+      DTS:From="Package\Get Database Last Change"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Get Last Book change" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{77A9CE2A-2623-4252-97E1-2004B4C62124}"
+      DTS:From="Package\Get Last Book change"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Initialize staging table" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{E3B9CAA7-CD82-4BE9-AE9F-2B2C18EC8BEF}"
+      DTS:From="Package\Initialize staging table"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Add New Book" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{04CFF5A6-3A22-4844-A45E-064A6AA02597}"
+      DTS:From="Package\Add New Book"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Sync Book Data" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{EB9CC238-552B-4AB7-A623-511E239DC28A}"
+      DTS:From="Package\Sync Book Data"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Update LastRowVersion" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="148,41.6"
+          Id="Package\Add New Book"
+          TopLeft="383,315" />
+        <NodeLayout
+          Size="204,41.6"
+          Id="Package\Get Database Last Change"
+          TopLeft="370.833333287802,62.73333332128" />
+        <NodeLayout
+          Size="182.4,41.6"
+          Id="Package\Get Last Book change"
+          TopLeft="364,146" />
+        <NodeLayout
+          Size="182.4,41.6"
+          Id="Package\Initialize staging table"
+          TopLeft="377,235" />
+        <NodeLayout
+          Size="152.8,41.6"
+          Id="Package\Sync Book Data"
+          TopLeft="388,393" />
+        <NodeLayout
+          Size="190.4,41.6"
+          Id="Package\Update LastRowVersion"
+          TopLeft="384,472" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="472.833333287802,104.33333332128">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-17.633333287802,41.66666667872"
+              Start="0,0"
+              End="-17.633333287802,34.16666667872">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,16.83333333936" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,16.83333333936"
+                    Point2="0,20.83333333936"
+                    Point3="-4,20.83333333936" />
+                  <mssgle:LineSegment
+                    End="-13.633333287802,20.83333333936" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-13.633333287802,20.83333333936"
+                    Point2="-17.633333287802,20.83333333936"
+                    Point3="-17.633333287802,24.83333333936" />
+                  <mssgle:LineSegment
+                    End="-17.633333287802,34.16666667872" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="455,188">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="13,47"
+              Start="0,0"
+              End="13,39.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,19.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,19.5"
+                    Point2="0,23.5"
+                    Point3="4,23.5" />
+                  <mssgle:LineSegment
+                    End="9,23.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="9,23.5"
+                    Point2="13,23.5"
+                    Point3="13,27.5" />
+                  <mssgle:LineSegment
+                    End="13,39.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="468,277">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-11,38"
+              Start="0,0"
+              End="-11,30.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,15" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,15"
+                    Point2="0,19"
+                    Point3="-4,19" />
+                  <mssgle:LineSegment
+                    End="-7,19" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-7,19"
+                    Point2="-11,19"
+                    Point3="-11,23" />
+                  <mssgle:LineSegment
+                    End="-11,30.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="460.75,357">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="0,36"
+              Start="0,0"
+              End="0,28.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="464.5,435">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="14.5,37"
+              Start="0,0"
+              End="14.5,29.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,14.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,14.5"
+                    Point2="0,18.5"
+                    Point3="4,18.5" />
+                  <mssgle:LineSegment
+                    End="10.5,18.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="10.5,18.5"
+                    Point2="14.5,18.5"
+                    Point3="14.5,22.5" />
+                  <mssgle:LineSegment
+                    End="14.5,29.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Add New Book">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mssgm="clr-namespace:Microsoft.SqlServer.Graph.Model;assembly=Microsoft.SqlServer.Graph">
+        <NodeLayout
+          Size="124,42"
+          Id="Package\Add New Book\Load Dim"
+          TopLeft="644,337" />
+        <NodeLayout
+          Size="139,42"
+          Id="Package\Add New Book\Load staging"
+          TopLeft="310,338" />
+        <NodeLayout
+          Size="125,42"
+          Id="Package\Add New Book\Búsqueda"
+          TopLeft="454,200" />
+        <NodeLayout
+          Size="164,42"
+          Id="Package\Add New Book\Origen de OLE DB"
+          TopLeft="425,81" />
+        <EdgeLayout
+          Id="Package\Add New Book.Paths[Salida de entradas no coincidentes de búsqueda]"
+          TopLeft="536,242">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="170,95"
+              Start="0,0"
+              End="170,87.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.7203791469194" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,34.7203791469194"
+                    Point2="0,38.7203791469194"
+                    Point3="4,38.7203791469194" />
+                  <mssgle:LineSegment
+                    End="166,38.7203791469194" />
+                  <mssgle:CubicBezierSegment
+                    Point1="166,38.7203791469194"
+                    Point2="170,38.7203791469194"
+                    Point3="170,42.7203791469194" />
+                  <mssgle:LineSegment
+                    End="170,87.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-21.8890234375,43.7203791469194,213.778046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Add New Book.Paths[Salida de entradas coincidentes de búsqueda]"
+          TopLeft="497,242">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="-117.5,96"
+              Start="0,0"
+              End="-117.5,88.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,35.1279620853081" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,35.1279620853081"
+                    Point2="0,39.1279620853081"
+                    Point3="-4,39.1279620853081" />
+                  <mssgle:LineSegment
+                    End="-113.5,39.1279620853081" />
+                  <mssgle:CubicBezierSegment
+                    Point1="-113.5,39.1279620853081"
+                    Point2="-117.5,39.1279620853081"
+                    Point3="-117.5,43.1279620853081" />
+                  <mssgle:LineSegment
+                    End="-117.5,88.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="-158.5690234375,44.1279620853081,199.638046875,12.1953125"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package\Add New Book.Paths[Salida de origen de OLE DB]"
+          TopLeft="507,123">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="9.5,77"
+              Start="0,0"
+              End="9.5,69.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,34.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,34.5"
+                    Point2="0,38.5"
+                    Point3="4,38.5" />
+                  <mssgle:LineSegment
+                    End="5.5,38.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="5.5,38.5"
+                    Point2="9.5,38.5"
+                    Point3="9.5,42.5" />
+                  <mssgle:LineSegment
+                    End="9.5,69.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <mssgm:EdgeLabel
+              BoundingBox="0,0,0,0"
+              RelativePosition="Any" />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
